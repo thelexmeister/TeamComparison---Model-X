@@ -155,5 +155,5 @@ comparison_df = pd.DataFrame({
 })
 
 st.write(comparison_df)
-st.write("Winning Probability determined via Elo probability.")
+st.write("Winning Probability determined via an adjusted Elo probability calculation.")
 
