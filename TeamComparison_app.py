@@ -104,9 +104,8 @@ def calculate_elo_probability(team_score, opponent_score):
 
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
-st.text('''All you have to do is start typing the name of your player in each slot and then click on it.
-For the flex players, just start typing the first one, click on it. Click again in the space, 
-then type your second name until you find the player you want to add.
+st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
+the first one, click on it. Click again in the space, then type your second name until you find the player you want to add.
 Then click outside the box when you have 2 names in red in the boxes.''')
 st.text(' ')
 st.text(' ')
@@ -115,10 +114,12 @@ st.text('''In the figure below, RED means high confidence in the prediction and 
 
 st.text(' ')
 st.text(' ')
-st.text('''These scores will be MUCH lower than the ESPN predicted values, as they are calculated via a different scoring equation
-than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
+st.text('''These scores are from my most current model, which will be MUCH lower than the ESPN predicted values, as they are calculated using a different scoring
+system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
 st.text(' ')
 st.text(' ')
+st.write('### MOST IMPORTANTLY - HAVE FUN!!')
+    
 # Create two columns for layout
 col1, col2 = st.columns(2)
 
