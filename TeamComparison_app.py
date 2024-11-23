@@ -64,14 +64,15 @@ def plot_player_scores(players, team_name=""):
             showlegend=False
         ))
 
+    # Update the layout to fix the y-axis range between 0 and 40
     fig.update_layout(
         title=f"{team_name} - Predicted Scores with Probability Ranges",
         xaxis_title="Player",
         yaxis_title="Predicted Score",
-        showlegend=False
+        showlegend=False,
+        yaxis=dict(range=[0, 40])  # Set y-axis to go from 0 to 40
     )
     return fig
-
 
 
 # Streamlit User Interface
