@@ -40,10 +40,9 @@ def plot_player_scores(players, team_name=""):
         fig.add_trace(go.Scatter(
             x=[player_data['Player']],
             y=[predicted_score],
-            mode='markers+text',
+            mode='markers',  # Only plot the marker (no text here)
             marker=dict(size=12, color=color),  # Use confidence color for the dot
-            text=f"{predicted_score}",  # Display the rounded score
-            textposition="top center"  # Position the text above the dot
+            showlegend=False
         ))
 
         # Plot the probability range with the confidence color
@@ -61,7 +60,7 @@ def plot_player_scores(players, team_name=""):
             y=[player_data['Upper Bound'] + 1],  # Place the score text slightly above the upper bound
             mode='text',
             text=[f"{predicted_score}"],
-            textposition="bottom center",  # Place the score text above the bar
+            textposition="bottom center",  # Position the score text above the bar
             showlegend=False
         ))
 
@@ -72,6 +71,7 @@ def plot_player_scores(players, team_name=""):
         showlegend=False
     )
     return fig
+
 
 
 # Streamlit User Interface
