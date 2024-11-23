@@ -10,7 +10,7 @@ df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * 
 df['Upper Bound'] = df['Adjusted Median Score'] + df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
 
 # Function to plot the player's predicted scores with probability ranges
-def plot_player_scores(players):
+def plot_player_scores(players, team_name=""):
     fig = go.Figure()
 
     for player in players:
@@ -37,7 +37,7 @@ def plot_player_scores(players):
         ))
 
     fig.update_layout(
-        title="Player Predicted Scores with Probability Ranges",
+        title=f"{team_name} - Predicted Scores with Probability Ranges",
         xaxis_title="Player",
         yaxis_title="Predicted Score",
         showlegend=False
@@ -67,8 +67,8 @@ with col1:
     selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
     # Plot your team's predicted scores with probability ranges
-    fig = plot_player_scores(selected_players)
-    st.plotly_chart(fig)
+    fig = plot_player_scores(selected_players, team_name="Your Team")
+    st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for your team
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
@@ -91,8 +91,8 @@ with col2:
     opponent_selected_players = [opponent_qb, opponent_rb1, opponent_rb2, opponent_wr1, opponent_wr2, opponent_te] + opponent_flex
 
     # Plot the opponent's predicted scores with probability ranges
-    fig_opponent = plot_player_scores(opponent_selected_players)
-    st.plotly_chart(fig_opponent)
+    fig_opponent = plot_player_scores(opponent_selected_players, team_name="Opponent's Team")
+    st.plotly_chart(fig_opponent, key="opponent_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for the opponent's team
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
@@ -106,6 +106,5 @@ comparison_df = pd.DataFrame({
 })
 
 st.write(comparison_df)
-
 
 
