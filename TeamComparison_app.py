@@ -37,7 +37,7 @@ def plot_player_scores(players, team_name=""):
         ))
 
     fig.update_layout(
-        title=f"{team_name} - Predicted Scores with Probability Ranges",
+        title=f"{team_name} - Predicted Scores",
         xaxis_title="Player",
         yaxis_title="Predicted Score",
         showlegend=False
