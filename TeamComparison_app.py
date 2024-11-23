@@ -70,7 +70,7 @@ def plot_player_scores(players, team_name=""):
         xaxis_title="Player",
         yaxis_title="Predicted Score",
         showlegend=False,
-        yaxis=dict(range=[0, 40])  # Set y-axis to go from 0 to 40
+        yaxis=dict(range=[0, 30])  # Set y-axis to go from 0 to 40
     )
     return fig
 
