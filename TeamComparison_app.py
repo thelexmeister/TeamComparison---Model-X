@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
+import scipy.stats as stats
 
 # Set the layout to wide
 st.set_page_config(layout="wide")
@@ -8,22 +10,31 @@ st.set_page_config(layout="wide")
 # Load the data from an Excel file
 df = pd.read_excel('player_median_scores.xlsx')
 
-# Calculate the lower and upper bounds based on the probability
-df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
-df['Upper Bound'] = df['Adjusted Median Score'] + df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
+# Function to calculate total score mean and standard deviation
+def calculate_team_stats(players):
+    total_mean = 0
+    total_stddev = 0
+    
+    for player in players:
+        player_data = df[df['Player'] == player].iloc[0]
+        predicted_score = player_data['Adjusted Median Score']
+        stddev = predicted_score * 0.2  # Assuming a 20% standard deviation as an example, adjust if needed
+        
+        total_mean += predicted_score
+        total_stddev += stddev**2  # Variance is stddev squared
 
-# Map the confidence score group to specific colors
-color_map = {
-    'High Confidence': 'red', 
-    'Moderate Confidence': 'blue', 
-    'Low Confidence': 'green'
-}
+    total_stddev = np.sqrt(total_stddev)  # Get the combined standard deviation
+    return total_mean, total_stddev
 
-# Add the color column based on the Score Group
-df['Color'] = df['Score Group'].map(color_map)
-
-# If there are any missing colors (in case a score group is undefined), fill them with 'grey'
-df['Color'] = df['Color'].fillna('grey')
+# Function to calculate probability based on normal distributions
+def calculate_probability(team_mean, team_stddev, opponent_mean, opponent_stddev):
+    # Calculate the difference in scores
+    diff_mean = team_mean - opponent_mean
+    diff_stddev = np.sqrt(team_stddev**2 + opponent_stddev**2)
+    
+    # Calculate the probability that team A's score is higher than team B's score
+    prob_team_wins = stats.norm.cdf(0, loc=diff_mean, scale=diff_stddev)
+    return prob_team_wins
 
 # Function to plot the player's predicted scores with probability ranges
 def plot_player_scores(players, team_name=""):
@@ -74,13 +85,6 @@ def plot_player_scores(players, team_name=""):
     )
     return fig
 
-
-# Elo Probability Calculation Function
-def calculate_elo_probability(team_score, opponent_score):
-    # Elo rating system formula
-    probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
-    return probability
-
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it.
@@ -116,8 +120,9 @@ with col1:
     st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for your team
-    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-    st.write(f"Total Predicted Score for Your Team: {round(total_score, 1)}")
+    your_team_mean, your_team_stddev = calculate_team_stats(selected_players)
+    st.write(f"Your Team's Total Predicted Score Mean: {your_team_mean:.1f}")
+    st.write(f"Your Team's Total Predicted Score StdDev: {your_team_stddev:.1f}")
 
 # Right Column - Opponent's Team
 with col2:
@@ -140,20 +145,20 @@ with col2:
     st.plotly_chart(fig_opponent, key="opponent_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for the opponent's team
-    opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
-    st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
+    opponent_team_mean, opponent_team_stddev = calculate_team_stats(opponent_selected_players)
+    st.write(f"Opponent's Total Predicted Score Mean: {opponent_team_mean:.1f}")
+    st.write(f"Opponent's Total Predicted Score StdDev: {opponent_team_stddev:.1f}")
 
-# Calculate the Elo probability of your team winning
-elo_probability = calculate_elo_probability(total_score, opponent_total_score)
+# Calculate probability of your team winning
+probability = calculate_probability(your_team_mean, your_team_stddev, opponent_team_mean, opponent_team_stddev)
 
-# Display a comparison table of the total predicted scores
+# Display a comparison table of the total predicted scores and the winning probability
 st.write("### Total Predicted Score Comparison")
 comparison_df = pd.DataFrame({
     "Team": ["Your Team", "Opponent's Team"],
-    "Total Predicted Score": [round(total_score, 1), round(opponent_total_score, 1)],
-    "Winning Probability (Your Team)": [f"{round(elo_probability * 100, 2)}%", "-"]
+    "Total Predicted Score": [round(your_team_mean, 1), round(opponent_team_mean, 1)],
+    "Winning Probability (Your Team)": [f"{round(probability * 100, 2)}%", "-"]
 })
 
 st.write(comparison_df)
-st.write("Winning Probability determined via an adjusted Elo probability calculation.")
-
+st.write("The probability of your team winning is computed based on comparing the two teams' predicted scores using a normal distribution.")
