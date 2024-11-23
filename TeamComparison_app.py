@@ -66,8 +66,9 @@ def plot_player_scores(players, team_name=""):
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it.
-For the flex players, just type the first one, click on it. Click again in the space, type your second name until you find the player
-Then click outside the box when you have 2 names in red in the box.''')
+For the flex players, just start typing the first one, click on it. Click again in the space, 
+then type your second name until you find the player you want to add.
+Then click outside the box when you have 2 names in red in the boxes.''')
 st.text(' ')
 st.text(' ')
 st.text('''In the figure below, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
