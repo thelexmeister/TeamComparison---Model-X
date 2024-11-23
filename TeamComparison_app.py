@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
-
-# Load the data from a CSV file
+# Load the data from an Excel file
 df = pd.read_excel('player_median_scores.xlsx')
 
 # Calculate the lower and upper bounds based on the probability
@@ -44,45 +43,56 @@ def plot_player_scores(players):
 # Streamlit User Interface
 st.title('NFL Fantasy Team Prediction Dashboard')
 
-# Select positions for your team
-qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
-rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
-rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
-wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
-wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
-te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
-flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
+# Create two columns for layout
+col1, col2 = st.columns(2)
 
-# Combine selected players for your team
-selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
+# Left Column - Your Team
+with col1:
+    st.header("Your Team")
 
-# Plot your team's predicted scores with probability ranges
-fig = plot_player_scores(selected_players)
-st.plotly_chart(fig)
+    # Select positions for your team
+    qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
+    rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
+    rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
+    wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
+    wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
+    te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
+    flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
 
-# Calculate and display the total predicted score for your team
-total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-st.write(f"Total Predicted Score for Your Team: {total_score}")
+    # Combine selected players for your team
+    selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
-# Select positions for the opponent's team
-opponent_qb = st.selectbox("Select Opponent's Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
-opponent_rb1 = st.selectbox("Select Opponent's Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
-opponent_rb2 = st.selectbox("Select Opponent's Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
-opponent_wr1 = st.selectbox("Select Opponent's Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
-opponent_wr2 = st.selectbox("Select Opponent's Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
-opponent_te = st.selectbox("Select Opponent's Tight End", df[df['Position'] == 'TE']['Player'].tolist())
-opponent_flex = st.multiselect("Select Opponent's Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
+    # Plot your team's predicted scores with probability ranges
+    fig = plot_player_scores(selected_players)
+    st.plotly_chart(fig)
 
-# Combine selected players for the opponent's team
-opponent_selected_players = [opponent_qb, opponent_rb1, opponent_rb2, opponent_wr1, opponent_wr2, opponent_te] + opponent_flex
+    # Calculate and display the total predicted score for your team
+    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
+    st.write(f"Total Predicted Score for Your Team: {total_score}")
 
-# Plot the opponent's predicted scores with probability ranges
-fig_opponent = plot_player_scores(opponent_selected_players)
-st.plotly_chart(fig_opponent)
+# Right Column - Opponent's Team
+with col2:
+    st.header("Opponent's Team")
 
-# Calculate and display the total predicted score for the opponent's team
-opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
-st.write(f"Total Predicted Score for Opponent's Team: {opponent_total_score}")
+    # Select positions for the opponent's team
+    opponent_qb = st.selectbox("Select Opponent's Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
+    opponent_rb1 = st.selectbox("Select Opponent's Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
+    opponent_rb2 = st.selectbox("Select Opponent's Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
+    opponent_wr1 = st.selectbox("Select Opponent's Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
+    opponent_wr2 = st.selectbox("Select Opponent's Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
+    opponent_te = st.selectbox("Select Opponent's Tight End", df[df['Position'] == 'TE']['Player'].tolist())
+    opponent_flex = st.multiselect("Select Opponent's Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
+
+    # Combine selected players for the opponent's team
+    opponent_selected_players = [opponent_qb, opponent_rb1, opponent_rb2, opponent_wr1, opponent_wr2, opponent_te] + opponent_flex
+
+    # Plot the opponent's predicted scores with probability ranges
+    fig_opponent = plot_player_scores(opponent_selected_players)
+    st.plotly_chart(fig_opponent)
+
+    # Calculate and display the total predicted score for the opponent's team
+    opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
+    st.write(f"Total Predicted Score for Opponent's Team: {opponent_total_score}")
 
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
@@ -92,4 +102,5 @@ comparison_df = pd.DataFrame({
 })
 
 st.write(comparison_df)
+
 
