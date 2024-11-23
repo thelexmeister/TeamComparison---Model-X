@@ -169,11 +169,12 @@ with col2:
 # Calculate the Elo probability of your team winning
 elo_probability = calculate_elo_probability(total_score, opponent_total_score)
 
-st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
-        GREEN means low confidence.''')
 
 st.text(' ')
+st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
+        GREEN means low confidence.''')
 st.text(' ')
+
 
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
