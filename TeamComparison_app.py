@@ -113,6 +113,12 @@ st.text(' ')
 st.text('''In the figure below, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
         GREEN means low confidence.''')
 
+st.text(' ')
+st.text(' ')
+st.text('''These scores will be MUCH lower than the ESPN predicted values, as they are calculated via a different scoring equation
+than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
+st.text(' ')
+st.text(' ')
 # Create two columns for layout
 col1, col2 = st.columns(2)
 
