@@ -75,6 +75,12 @@ def plot_player_scores(players, team_name=""):
     return fig
 
 
+# Elo Probability Calculation Function
+def calculate_elo_probability(team_score, opponent_score):
+    # Elo rating system formula
+    probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
+    return probability
+
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it.
@@ -137,11 +143,15 @@ with col2:
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
     st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
+# Calculate the Elo probability of your team winning
+elo_probability = calculate_elo_probability(total_score, opponent_total_score)
+
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
 comparison_df = pd.DataFrame({
     "Team": ["Your Team", "Opponent's Team"],
-    "Total Predicted Score": [round(total_score, 1), round(opponent_total_score, 1)]
+    "Total Predicted Score": [round(total_score, 1), round(opponent_total_score, 1)],
+    "Winning Probability (Your Team)": [f"{round(elo_probability * 100, 2)}%", "-"]
 })
 
 st.write(comparison_df)
