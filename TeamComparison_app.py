@@ -10,9 +10,9 @@ st.set_page_config(layout="wide")
 # Load the data from an Excel file
 df = pd.read_excel('player_median_scores.xlsx')
 
-# Check if 'Score Group' exists, if not, add it with default values
-if 'Score Group' not in df.columns:
-    df['Score Group'] = 'Moderate Confidence'  # Default group if not present
+# Calculate the lower and upper bounds based on the probability
+df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
+df['Upper Bound'] = df['Adjusted Median Score'] + df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
 
 # Map the confidence score group to specific colors
 color_map = {
@@ -26,6 +26,10 @@ df['Color'] = df['Score Group'].map(color_map)
 
 # If there are any missing colors (in case a score group is undefined), fill them with 'grey'
 df['Color'] = df['Color'].fillna('grey')
+
+# Check if 'Score Group' exists, if not, add it with default values
+if 'Score Group' not in df.columns:
+    df['Score Group'] = 'Moderate Confidence'  # Default group if not present
 
 # Function to calculate total score mean and standard deviation
 def calculate_team_stats(players):
