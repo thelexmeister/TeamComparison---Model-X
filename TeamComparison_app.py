@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# Set the layout to wide
+st.set_page_config(layout="wide")
+
 # Load the data from an Excel file
 df = pd.read_excel('player_median_scores.xlsx')
 
