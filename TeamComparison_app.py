@@ -15,12 +15,16 @@ def plot_player_scores(players):
 
     for player in players:
         player_data = df[df['Player'] == player].iloc[0]
+        
+        # Round the predicted score to 1 decimal place
+        predicted_score = round(player_data['Adjusted Median Score'], 1)
+
         fig.add_trace(go.Scatter(
             x=[player_data['Player']],
-            y=[player_data['Adjusted Median Score']],
+            y=[predicted_score],
             mode='markers+text',
             marker=dict(size=12, color='blue'),
-            text=f"{player_data['Adjusted Median Score']}",
+            text=f"{predicted_score}",  # Display the rounded score
             textposition="top center"
         ))
 
@@ -102,5 +106,6 @@ comparison_df = pd.DataFrame({
 })
 
 st.write(comparison_df)
+
 
 
