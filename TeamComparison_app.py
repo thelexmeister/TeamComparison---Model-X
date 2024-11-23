@@ -137,6 +137,7 @@ with col1:
     st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
      # Calculate and display the total predicted score for your team
+    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
     your_team_mean, your_team_stddev = calculate_team_stats(selected_players)
     st.write(f"Your Team's Total Predicted Score Mean: {your_team_mean:.1f}")
     st.write(f"Your Team's Total Predicted Score StdDev: {your_team_stddev:.1f}")
