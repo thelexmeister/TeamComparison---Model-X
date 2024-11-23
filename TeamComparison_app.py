@@ -108,7 +108,6 @@ st.text('''All you have to do is start typing the name of your player in each sl
 the first one, click on it. Click again in the space, then type your second name until you find the player you want to add.
 Then click outside the box when you have 2 names in red in the boxes.''')
 st.text(' ')
-st.text(' ')
 st.text('''These scores are from my most current model, which will be MUCH lower than the ESPN predicted values, as they are calculated using a different scoring
 system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
 st.text(' ')
