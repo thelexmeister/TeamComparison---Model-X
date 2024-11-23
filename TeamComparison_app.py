@@ -12,6 +12,19 @@ df = pd.read_excel('player_median_scores.xlsx')
 df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
 df['Upper Bound'] = df['Adjusted Median Score'] + df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
 
+# Map the confidence score group to specific colors
+color_map = {
+    'High Confidence': 'red', 
+    'Moderate Confidence': 'blue', 
+    'Low Confidence': 'green'
+}
+
+# Add the color column based on the Score Group
+df['Color'] = df['Score Group'].map(color_map)
+
+# If there are any missing colors (in case a score group is undefined), fill them with 'grey'
+df['Color'] = df['Color'].fillna('grey')
+
 # Function to plot the player's predicted scores with probability ranges
 def plot_player_scores(players, team_name=""):
     fig = go.Figure()
@@ -21,26 +34,29 @@ def plot_player_scores(players, team_name=""):
         
         # Round the predicted score to 1 decimal place
         predicted_score = round(player_data['Adjusted Median Score'], 1)
+        color = player_data['Color']  # Use the color associated with the player's confidence level
 
+        # Plot the dot (representing the score) with the confidence color
         fig.add_trace(go.Scatter(
             x=[player_data['Player']],
             y=[predicted_score],
             mode='markers+text',
-            marker=dict(size=12, color='blue'),
+            marker=dict(size=12, color=color),  # Use confidence color for the dot
             text=f"{predicted_score}",  # Display the rounded score
             textposition="top center"
         ))
 
+        # Plot the probability range with the confidence color
         fig.add_trace(go.Scatter(
             x=[player_data['Player'], player_data['Player']],
             y=[player_data['Lower Bound'], player_data['Upper Bound']],
             mode='lines',
-            line=dict(width=2, color='orange'),
+            line=dict(width=8, color=color),  # Widen the probability bars and color them
             showlegend=False
         ))
 
     fig.update_layout(
-        title=f"{team_name} - Predicted Scores",
+        title=f"{team_name} - Predicted Scores with Probability Ranges",
         xaxis_title="Player",
         yaxis_title="Predicted Score",
         showlegend=False
