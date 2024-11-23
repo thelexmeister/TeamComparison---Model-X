@@ -15,9 +15,9 @@ def plot_player_scores(players):
     fig = go.Figure()
 
     for player in players:
-        player_data = df[df['Player Name'] == player].iloc[0]
+        player_data = df[df['Player'] == player].iloc[0]
         fig.add_trace(go.Scatter(
-            x=[player_data['Player Name']],
+            x=[player_data['Player']],
             y=[player_data['Adjusted Median Score']],
             mode='markers+text',
             marker=dict(size=12, color='blue'),
@@ -26,7 +26,7 @@ def plot_player_scores(players):
         ))
 
         fig.add_trace(go.Scatter(
-            x=[player_data['Player Name'], player_data['Player Name']],
+            x=[player_data['Player'], player_data['Player']],
             y=[player_data['Lower Bound'], player_data['Upper Bound']],
             mode='lines',
             line=dict(width=2, color='orange'),
@@ -45,13 +45,13 @@ def plot_player_scores(players):
 st.title('NFL Fantasy Team Prediction Dashboard')
 
 # Select positions for your team
-qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player Name'].tolist())
-rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player Name'].tolist())
-rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player Name'].tolist())
-wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player Name'].tolist())
-wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player Name'].tolist())
-te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player Name'].tolist())
-flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player Name'].tolist(), max_selections=2)
+qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
+rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
+rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
+wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
+wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
+te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
+flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
 
 # Combine selected players for your team
 selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
@@ -61,17 +61,17 @@ fig = plot_player_scores(selected_players)
 st.plotly_chart(fig)
 
 # Calculate and display the total predicted score for your team
-total_score = sum(df[df['Player Name'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
+total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
 st.write(f"Total Predicted Score for Your Team: {total_score}")
 
 # Select positions for the opponent's team
-opponent_qb = st.selectbox("Select Opponent's Quarterback", df[df['Position'] == 'QB']['Player Name'].tolist())
-opponent_rb1 = st.selectbox("Select Opponent's Running Back 1", df[df['Position'] == 'RB']['Player Name'].tolist())
-opponent_rb2 = st.selectbox("Select Opponent's Running Back 2", df[df['Position'] == 'RB']['Player Name'].tolist())
-opponent_wr1 = st.selectbox("Select Opponent's Wide Receiver 1", df[df['Position'] == 'WR']['Player Name'].tolist())
-opponent_wr2 = st.selectbox("Select Opponent's Wide Receiver 2", df[df['Position'] == 'WR']['Player Name'].tolist())
-opponent_te = st.selectbox("Select Opponent's Tight End", df[df['Position'] == 'TE']['Player Name'].tolist())
-opponent_flex = st.multiselect("Select Opponent's Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player Name'].tolist(), max_selections=2)
+opponent_qb = st.selectbox("Select Opponent's Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
+opponent_rb1 = st.selectbox("Select Opponent's Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
+opponent_rb2 = st.selectbox("Select Opponent's Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
+opponent_wr1 = st.selectbox("Select Opponent's Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
+opponent_wr2 = st.selectbox("Select Opponent's Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
+opponent_te = st.selectbox("Select Opponent's Tight End", df[df['Position'] == 'TE']['Player'].tolist())
+opponent_flex = st.multiselect("Select Opponent's Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
 
 # Combine selected players for the opponent's team
 opponent_selected_players = [opponent_qb, opponent_rb1, opponent_rb2, opponent_wr1, opponent_wr2, opponent_te] + opponent_flex
@@ -81,7 +81,7 @@ fig_opponent = plot_player_scores(opponent_selected_players)
 st.plotly_chart(fig_opponent)
 
 # Calculate and display the total predicted score for the opponent's team
-opponent_total_score = sum(df[df['Player Name'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
+opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
 st.write(f"Total Predicted Score for Opponent's Team: {opponent_total_score}")
 
 # Display a comparison table of the total predicted scores
