@@ -68,7 +68,7 @@ with col1:
 
     # Calculate and display the total predicted score for your team
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-    st.write(f"Total Predicted Score for Your Team: {total_score}")
+    st.write(f"Total Predicted Score for Your Team: {round(total_score, 1)}")
 
 # Right Column - Opponent's Team
 with col2:
@@ -92,13 +92,13 @@ with col2:
 
     # Calculate and display the total predicted score for the opponent's team
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
-    st.write(f"Total Predicted Score for Opponent's Team: {opponent_total_score}")
+    st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
 comparison_df = pd.DataFrame({
     "Team": ["Your Team", "Opponent's Team"],
-    "Total Predicted Score": [total_score, opponent_total_score]
+    "Total Predicted Score": [round(total_score, 1), round(opponent_total_score, 1)]
 })
 
 st.write(comparison_df)
