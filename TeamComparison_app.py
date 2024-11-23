@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # Load the data from a CSV file
-df = pd.read_csv('player_data.csv')
+df = pd.read_csv('player_median_scores.csv')
 
 # Calculate the lower and upper bounds based on the probability
 df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
