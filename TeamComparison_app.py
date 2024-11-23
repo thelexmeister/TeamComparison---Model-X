@@ -43,7 +43,7 @@ def plot_player_scores(players, team_name=""):
             mode='markers+text',
             marker=dict(size=12, color=color),  # Use confidence color for the dot
             text=f"{predicted_score}",  # Display the rounded score
-            textposition="top center"
+            textposition="top center"  # Position the text above the dot
         ))
 
         # Plot the probability range with the confidence color
@@ -55,6 +55,16 @@ def plot_player_scores(players, team_name=""):
             showlegend=False
         ))
 
+        # Add text labels for the predicted score above the probability bars
+        fig.add_trace(go.Scatter(
+            x=[player_data['Player']],
+            y=[player_data['Upper Bound'] + 1],  # Place the score text slightly above the upper bound
+            mode='text',
+            text=[f"{predicted_score}"],
+            textposition="bottom center",  # Place the score text above the bar
+            showlegend=False
+        ))
+
     fig.update_layout(
         title=f"{team_name} - Predicted Scores with Probability Ranges",
         xaxis_title="Player",
@@ -62,6 +72,7 @@ def plot_player_scores(players, team_name=""):
         showlegend=False
     )
     return fig
+
 
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
