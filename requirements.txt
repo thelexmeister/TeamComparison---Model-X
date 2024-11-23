@@ -1,8 +1,7 @@
-numpy==1.23.5
-pandas==1.5.3
+streamlit
+numpy
+pandas
+openpyxl
+plotly
 
-openpyxl==3.1.2
-plotly==5.15.0  # Add this line for Plotly
-setuptools==65.5.0
-python-dev-tools==2023.5.1
 
