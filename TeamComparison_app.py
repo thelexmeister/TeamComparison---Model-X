@@ -169,12 +169,11 @@ with col2:
 probability_of_winning = calculate_probability(your_team_mean, your_team_stddev, opponent_mean, opponent_stddev)
 #st.write(f"Probability of Your Team Winning: {probability_of_winning * 100:.2f}%")
 
-# Display a comparison table of the total predicted scores and the winning probability
-st.write("### Total Predicted Score Comparison")
+# Corrected line to format the probability and remove syntax error
 comparison_df = pd.DataFrame({
     "Team": ["Your Team", "Opponent's Team"],
-    "Total Predicted Score": [round(your_team_mean, 1), round(opponent_team_mean, 1)],
-    "Winning Probability (Your Team)": {probability_of_winning * 100:.2f}%", "-"]
+    "Total Predicted Score": [round(your_team_mean, 1), round(opponent_mean, 1)],  # Use opponent_mean here
+    "Winning Probability (Your Team)": [f"{probability_of_winning * 100:.2f}%", "-"]  # Correct string formatting
 })
 
 st.write(comparison_df)
