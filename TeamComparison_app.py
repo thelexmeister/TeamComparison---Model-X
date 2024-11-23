@@ -10,6 +10,23 @@ st.set_page_config(layout="wide")
 # Load the data from an Excel file
 df = pd.read_excel('player_median_scores.xlsx')
 
+# Check if 'Score Group' exists, if not, add it with default values
+if 'Score Group' not in df.columns:
+    df['Score Group'] = 'Moderate Confidence'  # Default group if not present
+
+# Map the confidence score group to specific colors
+color_map = {
+    'High Confidence': 'red', 
+    'Moderate Confidence': 'blue', 
+    'Low Confidence': 'green'
+}
+
+# Add the color column based on the Score Group
+df['Color'] = df['Score Group'].map(color_map)
+
+# If there are any missing colors (in case a score group is undefined), fill them with 'grey'
+df['Color'] = df['Color'].fillna('grey')
+
 # Function to calculate total score mean and standard deviation
 def calculate_team_stats(players):
     total_mean = 0
@@ -145,19 +162,19 @@ with col2:
     st.plotly_chart(fig_opponent, key="opponent_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for the opponent's team
-    opponent_team_mean, opponent_team_stddev = calculate_team_stats(opponent_selected_players)
-    st.write(f"Opponent's Total Predicted Score Mean: {opponent_team_mean:.1f}")
-    st.write(f"Opponent's Total Predicted Score StdDev: {opponent_team_stddev:.1f}")
+    opponent_mean, opponent_stddev = calculate_team_stats(opponent_selected_players)
 
-# Calculate probability of your team winning
-probability = calculate_probability(your_team_mean, your_team_stddev, opponent_team_mean, opponent_team_stddev)
+
+# Calculate the probability of your team winning
+probability_of_winning = calculate_probability(your_team_mean, your_team_stddev, opponent_mean, opponent_stddev)
+#st.write(f"Probability of Your Team Winning: {probability_of_winning * 100:.2f}%")
 
 # Display a comparison table of the total predicted scores and the winning probability
 st.write("### Total Predicted Score Comparison")
 comparison_df = pd.DataFrame({
     "Team": ["Your Team", "Opponent's Team"],
     "Total Predicted Score": [round(your_team_mean, 1), round(opponent_team_mean, 1)],
-    "Winning Probability (Your Team)": [f"{round(probability * 100, 2)}%", "-"]
+    "Winning Probability (Your Team)": {probability_of_winning * 100:.2f}%", "-"]
 })
 
 st.write(comparison_df)
