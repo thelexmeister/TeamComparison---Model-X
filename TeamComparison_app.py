@@ -46,9 +46,17 @@ def calculate_team_stats(players):
     total_stddev = np.sqrt(total_stddev)  # Get the combined standard deviation
     return total_mean, total_stddev
 
-# Function to plot the player's predicted scores with probability ranges
+# Function to plot the player's predicted scores with probability ranges and historical performance
 def plot_player_scores(players, team_name=""):
     fig = go.Figure()
+
+    # Color mapping for historical scores
+    historical_color_map = {
+        '4 Weeks Ago': 'yellow',
+        '3 Weeks Ago': 'yellow',
+        '2 Weeks Ago': 'orange',
+        '1 Week Ago' : 'orange'
+    }
 
     for player in players:
         player_data = df[df['Player'] == player].iloc[0]
@@ -57,37 +65,50 @@ def plot_player_scores(players, team_name=""):
         predicted_score = round(player_data['Adjusted Median Score'], 1)
         color = player_data['Color']  # Use the color associated with the player's confidence level
 
-        # Plot the dot (representing the score) with the confidence color
+        # Plot the historical scores in different colors
+        for week, color in historical_color_map.items():
+            historical_score = player_data.get(week, None)
+            if historical_score is not None:
+                fig.add_trace(go.Scatter(
+                    x=[player],
+                    y=[historical_score],
+                    mode='markers',
+                    marker=dict(size=12, color=color),
+                    name=f"{week} ({player})",
+                    showlegend=False
+                ))
+
+        # Plot the predicted score (current week) with the confidence color
         fig.add_trace(go.Scatter(
-            x=[player_data['Player']],
+            x=[player],
             y=[predicted_score],
-            mode='markers',  # Only plot the marker (no text here)
-            marker=dict(size=12, color=color),  # Use confidence color for the dot
+            mode='markers',
+            marker=dict(size=12, color=color),
             showlegend=False
         ))
 
         # Plot the probability range with the confidence color
         fig.add_trace(go.Scatter(
-            x=[player_data['Player'], player_data['Player']],
+            x=[player, player],
             y=[player_data['Lower Bound'], player_data['Upper Bound']],
             mode='lines',
-            line=dict(width=8, color=color),  # Widen the probability bars and color them
+            line=dict(width=8, color=color),
             showlegend=False
         ))
 
         # Add text labels for the predicted score above the probability bars
         fig.add_trace(go.Scatter(
-            x=[player_data['Player']],
-            y=[player_data['Upper Bound'] + 1],  # Place the score text slightly above the upper bound
+            x=[player],
+            y=[player_data['Upper Bound'] + 1],
             mode='text',
             text=[f"{predicted_score}"],
-            textposition="bottom center",  # Position the score text above the bar
+            textposition="bottom center",
             showlegend=False
         ))
 
     # Update the layout to fix the y-axis range between 0 and 40
     fig.update_layout(
-        title=f"{team_name} - Predicted Scores with Probability Ranges",
+        title=f"{team_name} - Predicted Scores with Historical Performance",
         xaxis_title="Player",
         yaxis_title="Predicted Score",
         showlegend=False,
@@ -95,12 +116,6 @@ def plot_player_scores(players, team_name=""):
     )
     return fig
 
-
-# Elo Probability Calculation Function
-def calculate_elo_probability(team_score, opponent_score):
-    # Elo rating system formula
-    probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
-    return probability
 
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
@@ -112,7 +127,7 @@ st.text('''These scores are from my most current model, which will be MUCH lower
 system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
 st.text(' ')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
-    
+
 # Create two columns for layout
 col1, col2 = st.columns(2)
 
@@ -132,7 +147,7 @@ with col1:
     # Combine selected players for your team
     selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
-    # Plot your team's predicted scores with probability ranges
+    # Plot your team's predicted scores with historical performance
     fig = plot_player_scores(selected_players, team_name="Your Team")
     st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
@@ -158,7 +173,7 @@ with col2:
     # Combine selected players for the opponent's team
     opponent_selected_players = [opponent_qb, opponent_rb1, opponent_rb2, opponent_wr1, opponent_wr2, opponent_te] + opponent_flex
 
-    # Plot the opponent's predicted scores with probability ranges
+    # Plot the opponent's predicted scores with historical performance
     fig_opponent = plot_player_scores(opponent_selected_players, team_name="Opponent's Team")
     st.plotly_chart(fig_opponent, key="opponent_team_plot")  # Added unique key for this plot
 
@@ -166,24 +181,3 @@ with col2:
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
     st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
-# Calculate the Elo probability of your team winning
-elo_probability = calculate_elo_probability(total_score, opponent_total_score)
-
-
-st.text(' ')
-st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
-        GREEN means low confidence.''')
-st.text(' ')
-
-
-# Display a comparison table of the total predicted scores
-st.write("### Total Predicted Score Comparison")
-comparison_df = pd.DataFrame({
-    "Team": ["Your Team", "Opponent's Team"],
-    "Total Predicted Score": [round(total_score, 1), round(opponent_total_score, 1)],
-    "Winning Probability (Your Team)": [f"{round(elo_probability * 100, 2)}%", "-"]
-})
-
-st.write(comparison_df)
-
-st.write("The probability of your team winning is computed based on comparing the two teams' predicted scores using an adjusted Elo-like equation.")
