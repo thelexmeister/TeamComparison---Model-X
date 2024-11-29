@@ -133,6 +133,12 @@ def plot_historical_scores(players):
     )
     return fig
 
+# Elo Probability Calculation Function
+def calculate_elo_probability(team_score, opponent_score):
+    # Elo rating system formula
+    probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
+    return probability
+
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
