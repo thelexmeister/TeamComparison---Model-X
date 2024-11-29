@@ -96,25 +96,30 @@ def plot_player_scores(players, team_name=""):
     )
     return fig
 
-# Function to plot historical scores for each player over the last four weeks
-def plot_historical_scores(players):
+# Function to plot historical scores for each player (last 4 weeks)
+def plot_historical_scores(players, df2):
     fig = go.Figure()
 
     # Color mapping for historical scores
     historical_color_map = {
-        '4 Weeks Ago': 'red',
-        '3 Weeks Ago': 'yellow',
-        '2 Weeks Ago': 'green',
-        '1 Week Ago': 'blue'
+        'Week 12': 'red',
+        'Week 11': 'yellow',
+        'Week 10': 'green',
+        'Week 9': 'blue'
     }
 
+    # Columns corresponding to the last four weeks (adjust as new weeks come in)
+    week_columns = ['Week 12', 'Week 11', 'Week 10', 'Week 9']
+
     for player in players:
-        player_data = df2[df2['Player'] == player].iloc[0]
+        # Fetch the historical scores for the player from df2
+        player_data = df2[df2['Player'] == player]
         
-        # Plot historical scores in different colors
-        for week, color in historical_color_map.items():
-            historical_score = player_data.get(week, None)
-            if historical_score is not None:
+        # If the player exists in the historical data
+        if not player_data.empty:
+            # For each week, plot the score with corresponding color
+            for week, color in zip(week_columns, historical_color_map.values()):
+                historical_score = player_data[week].values[0]  # Get the score for the week
                 fig.add_trace(go.Scatter(
                     x=[player],
                     y=[historical_score],
