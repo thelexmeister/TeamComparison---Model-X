@@ -207,18 +207,27 @@ with col2:
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
     st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
-# Display historical scores for each player chosen
-st.write("### Historical Performance of Selected Players (Last 4 Weeks)")
-fig_historical = plot_historical_scores(selected_players, df2)
-st.plotly_chart(fig_historical, key="historical_scores_plot")
-
-# Calculate the Elo probability of your team winning (this part remains unchanged)
-elo_probability = calculate_elo_probability(total_score, opponent_total_score)
 
 st.text(' ')
 st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
         GREEN means low confidence.''')
 st.text(' ')
+
+# Display historical scores for each player chosen
+st.write("### Historical Performance of Selected Players (Last 4 Weeks)")
+fig_historical = plot_historical_scores(selected_players, df2)
+st.plotly_chart(fig_historical, key="historical_scores_plot")
+
+st.text(' ')
+st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 12': 'red',
+        'Week 11': 'yellow',
+        'Week 10': 'green',
+        'Week 9': 'blue'''')
+st.text(' ')
+
+# Calculate the Elo probability of your team winning (this part remains unchanged)
+elo_probability = calculate_elo_probability(total_score, opponent_total_score)
+
 
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
