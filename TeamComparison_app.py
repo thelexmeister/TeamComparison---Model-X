@@ -222,7 +222,7 @@ st.text(' ')
 st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 12': 'red',
         'Week 11': 'yellow',
         'Week 10': 'green',
-        'Week 9': 'blue'''')
+        'Week 9': 'blue'.''')
 st.text(' ')
 
 # Calculate the Elo probability of your team winning (this part remains unchanged)
