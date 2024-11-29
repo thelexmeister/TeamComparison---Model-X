@@ -175,15 +175,13 @@ with col1:
     # Combine selected players for your team
     selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
-    # Plot your team's predicted scores with probability ranges
+    # Plot your team's predicted scores with probability ranges (you already have this function)
     fig = plot_player_scores(selected_players, team_name="Your Team")
     st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
-     # Calculate and display the total predicted score for your team
+    # Calculate and display the total predicted score for your team
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-    your_team_mean, your_team_stddev = calculate_team_stats(selected_players)
-    st.write(f"Your Team's Total Predicted Score Mean: {your_team_mean:.1f}")
-    st.write(f"Your Team's Total Predicted Score StdDev: {your_team_stddev:.1f}")
+    st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
 
 # Right Column - Opponent's Team
 with col2:
@@ -209,18 +207,18 @@ with col2:
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
     st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
+# Display historical scores for each player chosen
+st.write("### Historical Performance of Selected Players (Last 4 Weeks)")
+fig_historical = plot_historical_scores(selected_players, df2)
+st.plotly_chart(fig_historical, key="historical_scores_plot")
+
+# Calculate the Elo probability of your team winning (this part remains unchanged)
+elo_probability = calculate_elo_probability(total_score, opponent_total_score)
+
 st.text(' ')
 st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
         GREEN means low confidence.''')
 st.text(' ')
-
-# Display historical scores for each player chosen
-st.write("### Historical Performance of Selected Players (Last 4 Weeks)")
-fig_historical = plot_historical_scores(selected_players)
-st.plotly_chart(fig_historical, key="historical_scores_plot")
-
-# Calculate the Elo probability of your team winning
-elo_probability = calculate_elo_probability(total_score, opponent_total_score)
 
 # Display a comparison table of the total predicted scores
 st.write("### Total Predicted Score Comparison")
@@ -233,4 +231,3 @@ comparison_df = pd.DataFrame({
 st.write(comparison_df)
 
 st.write("The probability of your team winning is computed based on comparing the two teams' predicted scores using an adjusted Elo-like equation.")
-
