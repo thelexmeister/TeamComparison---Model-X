@@ -7,7 +7,8 @@ import numpy as np
 st.set_page_config(layout="wide")
 
 # Load the data from an Excel file
-df = pd.read_excel('player_median_scores.xlsx')
+df  = pd.read_excel('player_median_scores.xlsx')
+df2 = pd.read_excel('PlayerClusters - 2024 FFBall.xlsx')
 
 # Calculate the lower and upper bounds based on the probability
 df['Lower Bound'] = df['Adjusted Median Score'] - df['Adjusted Median Score'] * ((0.5 - df['Probability']) / 2)
@@ -108,7 +109,7 @@ def plot_historical_scores(players):
     }
 
     for player in players:
-        player_data = df[df['Player'] == player].iloc[0]
+        player_data = df2[df2['Player'] == player].iloc[0]
         
         # Plot historical scores in different colors
         for week, color in historical_color_map.items():
