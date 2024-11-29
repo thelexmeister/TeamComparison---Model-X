@@ -126,7 +126,7 @@ def plot_historical_scores(players, df2):
                     mode='markers',
                     marker=dict(size=12, color=color),
                     name=f"{week} ({player})",
-                    showlegend=True
+                    showlegend=False
                 ))
 
     # Update layout for the historical scores figure
