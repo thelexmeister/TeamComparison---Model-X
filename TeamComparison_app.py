@@ -219,7 +219,7 @@ fig_historical = plot_historical_scores(selected_players, df2)
 st.plotly_chart(fig_historical, key="historical_scores_plot")
 
 st.text(' ')
-st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 12': 'red', 'Week 11': 'yellow', 'Week 10': 'green', 'Week 9': 'blue'.''')
+st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 13': 'red', 'Week 12': 'yellow', 'Week 11': 'green', 'Week 10': 'blue'.''')
 st.text(' ')
 
 # Calculate the Elo probability of your team winning (this part remains unchanged)
