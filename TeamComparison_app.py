@@ -102,14 +102,14 @@ def plot_historical_scores(players, df2):
 
     # Color mapping for historical scores
     historical_color_map = {
-        'Week 12': 'red',
-        'Week 11': 'yellow',
-        'Week 10': 'green',
-        'Week 9': 'blue'
+        'Week 13': 'red',
+        'Week 12': 'yellow',
+        'Week 11': 'green',
+        'Week 10': 'blue'
     }
 
     # Columns corresponding to the last four weeks (adjust as new weeks come in)
-    week_columns = ['Week 12', 'Week 11', 'Week 10', 'Week 9']
+    week_columns = ['Week 13', 'Week 12', 'Week 11', 'Week 10']
 
     for player in players:
         # Fetch the historical scores for the player from df2
