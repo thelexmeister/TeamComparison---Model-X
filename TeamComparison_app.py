@@ -102,14 +102,14 @@ def plot_historical_scores(players, df2):
 
     # Color mapping for historical scores
     historical_color_map = {
-        'Week 14': 'red',
-        'Week 13': 'yellow',
-        'Week 12': 'green',
-        'Week 11': 'blue'
+        'Week 15': 'red',
+        'Week 14': 'yellow',
+        'Week 13': 'green',
+        'Week 12': 'blue'
     }
 
     # Columns corresponding to the last four weeks (adjust as new weeks come in)
-    week_columns = ['Week 14', 'Week 13', 'Week 12', 'Week 11']
+    week_columns = ['Week 15', 'Week 14', 'Week 13', 'Week 12']
 
     for player in players:
         # Fetch the historical scores for the player from df2
@@ -219,7 +219,7 @@ fig_historical = plot_historical_scores(selected_players, df2)
 st.plotly_chart(fig_historical, key="historical_scores_plot")
 
 st.text(' ')
-st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 14': 'red', 'Week 13': 'yellow', 'Week 12': 'green', 'Week 11': 'blue'.''')
+st.text('''In the figure above showing the historical scores for each of the last 4 weeks: 'Week 15': 'red', 'Week 14': 'yellow', 'Week 13': 'green', 'Week 12': 'blue'.''')
 st.text(' ')
 
 # Calculate the Elo probability of your team winning (this part remains unchanged)
