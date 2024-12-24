@@ -164,24 +164,25 @@ with col1:
     st.header("Your Team")
 
     # Select positions for your team
-    qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
-    rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
-    rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
-    wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
-    wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
-    te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
-    flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
+    qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist(), key="qb_select")
+    rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist(), key="rb1_select")
+    rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist(), key="rb2_select")
+    wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist(), key="wr1_select")
+    wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist(), key="wr2_select")
+    te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist(), key="te_select")
+    flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2, key="flex_select")
 
     # Combine selected players for your team
     selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
-    # Plot your team's predicted scores with probability ranges (you already have this function)
+    # Plot your team's predicted scores with probability ranges
     fig = plot_player_scores(selected_players, team_name="Your Team")
-    st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
+    st.plotly_chart(fig, key="your_team_plot")
 
     # Calculate and display the total predicted score for your team
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
     st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
+
 
 # Right Column - Opponent's Team
 with col2:
