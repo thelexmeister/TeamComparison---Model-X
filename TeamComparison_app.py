@@ -256,7 +256,7 @@ te_pool = st.multiselect("Select Tight Ends", df[df['Position'] == 'TE']['Player
 # Combining all the selected players in one list
 selected_players = qb_pool + rb_pool + wr_pool + te_pool
 
-# Define function to get optimal roster from the entire dataset
+# Function to get the initial optimal roster based on the entire dataset
 def get_initial_optimal_roster(df):
     optimal_roster = {}
     
@@ -285,6 +285,37 @@ def get_initial_optimal_roster(df):
     
     return optimal_roster
 
+# Function to update optimal roster based on selected players
+def get_updated_optimal_roster(df, selected_players):
+    optimal_roster = {}
+    
+    # Extract selected positions
+    qb_pool = [player for player in selected_players if player in df[df['Position'] == 'QB']['Player'].tolist()]
+    rb_pool = [player for player in selected_players if player in df[df['Position'] == 'RB']['Player'].tolist()]
+    wr_pool = [player for player in selected_players if player in df[df['Position'] == 'WR']['Player'].tolist()]
+    te_pool = [player for player in selected_players if player in df[df['Position'] == 'TE']['Player'].tolist()]
+    
+    # Get the best QB, RBs, WRs, TE, and Flex based on the selected players
+    best_qb = max(qb_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0]) if qb_pool else get_initial_optimal_roster(df)['QB']
+    best_rbs = sorted(rb_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2] if rb_pool else get_initial_optimal_roster(df)['RB1'], get_initial_optimal_roster(df)['RB2']
+    best_wrs = sorted(wr_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2] if wr_pool else get_initial_optimal_roster(df)['WR1'], get_initial_optimal_roster(df)['WR2']
+    best_te = max(te_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0]) if te_pool else get_initial_optimal_roster(df)['TE']
+    
+    # Combine RB, WR, TE and pick the top 2 for Flex positions
+    remaining_players = (set(rb_pool + wr_pool + te_pool) - set(best_rbs) - set(best_wrs) - set([best_te]))
+    best_additional_players = sorted(remaining_players, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2] if remaining_players else get_initial_optimal_roster(df)['Flex1'], get_initial_optimal_roster(df)['Flex2']
+    
+    optimal_roster = {
+        'QB': best_qb,
+        'RB1': best_rbs[0], 'RB2': best_rbs[1],
+        'WR1': best_wrs[0], 'WR2': best_wrs[1],
+        'TE': best_te,
+        'Flex1': best_additional_players[0], 'Flex2': best_additional_players[1]
+    }
+    
+    return optimal_roster
+
+
 # Left Column - Your Team
 with col1:
     st.header("Your Optimal Team")
@@ -305,44 +336,20 @@ with col1:
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
     st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
 
-# Initial optimal roster based on the entire dataset
-optimal_roster = get_initial_optimal_roster(df)
+# Get the initial optimal roster
+initial_optimal_roster = get_initial_optimal_roster(df)
 
-# Check if there are any selected players for the updated optimal roster
-if selected_players:
-    # Update the optimal roster based on the user's selected players
-    updated_roster = {}
+# Get the updated optimal roster based on the user's selections
+updated_optimal_roster = get_updated_optimal_roster(df, selected_players)
 
-    # Update QB
-    updated_roster['QB'] = qb if qb in df[df['Position'] == 'QB']['Player'].tolist() else optimal_roster['QB']
-    
-    # Update RBs
-    updated_roster['RB1'] = rb1 if rb1 in df[df['Position'] == 'RB']['Player'].tolist() else optimal_roster['RB1']
-    updated_roster['RB2'] = rb2 if rb2 in df[df['Position'] == 'RB']['Player'].tolist() else optimal_roster['RB2']
-    
-    # Update WRs
-    updated_roster['WR1'] = wr1 if wr1 in df[df['Position'] == 'WR']['Player'].tolist() else optimal_roster['WR1']
-    updated_roster['WR2'] = wr2 if wr2 in df[df['Position'] == 'WR']['Player'].tolist() else optimal_roster['WR2']
-    
-    # Update TE
-    updated_roster['TE'] = te if te in df[df['Position'] == 'TE']['Player'].tolist() else optimal_roster['TE']
-    
-    # Update Flex players
-    flex_players = flex if set(flex).issubset(df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist()) else \
-        [optimal_roster['Flex1'], optimal_roster['Flex2']]
-    
-    updated_roster['Flex1'], updated_roster['Flex2'] = flex_players[:2]
-
-    # Display the updated optimal roster
-    st.write("### Updated Optimal Roster (Based on Your Selections)")
-    st.write(f"**QB:** {updated_roster['QB']}")
-    st.write(f"**RB1:** {updated_roster['RB1']}")
-    st.write(f"**RB2:** {updated_roster['RB2']}")
-    st.write(f"**WR1:** {updated_roster['WR1']}")
-    st.write(f"**WR2:** {updated_roster['WR2']}")
-    st.write(f"**TE:** {updated_roster['TE']}")
-    st.write(f"**Flex1:** {updated_roster['Flex1']}")
-    st.write(f"**Flex2:** {updated_roster['Flex2']}")
-else:
-    st.write("Please select players for each position.")
+# Display the optimal roster
+st.write("### Optimal Roster (Based on Your Selections)")
+st.write(f"**QB:** {updated_optimal_roster['QB']}")
+st.write(f"**RB1:** {updated_optimal_roster['RB1']}")
+st.write(f"**RB2:** {updated_optimal_roster['RB2']}")
+st.write(f"**WR1:** {updated_optimal_roster['WR1']}")
+st.write(f"**WR2:** {updated_optimal_roster['WR2']}")
+st.write(f"**TE:** {updated_optimal_roster['TE']}")
+st.write(f"**Flex1:** {updated_optimal_roster['Flex1']}")
+st.write(f"**Flex2:** {updated_optimal_roster['Flex2']}")
 
