@@ -311,7 +311,7 @@ with col1:
 # Check if there are any selected players for the optimal roster
 if selected_players:
     # Get the optimal roster
-    optimal_roster = get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool)
+    optimal_roster = get_optimal_roster(selected_players)
     
     # Display the optimal roster
     st.write("### Optimal Roster (Based on Predicted Scores)")
