@@ -286,7 +286,7 @@ def get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool):
 
 # Left Column - Your Team
 with col1:
-    st.header("Your Team")
+    st.header("Your Optimal Team")
 
     # Select positions for your team
     qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
@@ -301,12 +301,12 @@ with col1:
     selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
 
     # Plot your team's predicted scores with probability ranges (you already have this function)
-    fig = plot_player_scores(selected_players, team_name="Your Team")
-    st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
+    #fig = plot_player_scores(selected_players, team_name="Your Team")
+    #st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
 
     # Calculate and display the total predicted score for your team
-    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-    st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
+    #total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
+    #st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
 
 # Check if there are any selected players for the optimal roster
 if selected_players:
