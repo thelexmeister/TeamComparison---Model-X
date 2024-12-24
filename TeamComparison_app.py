@@ -283,13 +283,37 @@ def get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool):
     
     return optimal_roster
 
-# Check if there are any selected players
+# Left Column - Your Team
+with col1:
+    st.header("Your Team")
+
+    # Select positions for your team
+    qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
+    rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
+    rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
+    wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
+    wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
+    te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
+    flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
+
+    # Combine selected players for your team
+    selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
+
+    # Plot your team's predicted scores with probability ranges (you already have this function)
+    fig = plot_player_scores(selected_players, team_name="Your Team")
+    st.plotly_chart(fig, key="your_team_plot")  # Added unique key for this plot
+
+    # Calculate and display the total predicted score for your team
+    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
+    st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
+
+# Check if there are any selected players for the optimal roster
 if selected_players:
     # Get the optimal roster
     optimal_roster = get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool)
     
     # Display the optimal roster
-    st.write("### Optimal Roster")
+    st.write("### Optimal Roster (Based on Predicted Scores)")
     st.write(f"**QB:** {optimal_roster['QB']}")
     st.write(f"**RB1:** {optimal_roster['RB1']}")
     st.write(f"**RB2:** {optimal_roster['RB2']}")
@@ -300,5 +324,6 @@ if selected_players:
     st.write(f"**Flex2:** {optimal_roster['Flex2']}")
 else:
     st.write("Please select players for each position.")
+
 
 
