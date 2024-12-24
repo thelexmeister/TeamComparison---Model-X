@@ -322,26 +322,6 @@ def get_updated_optimal_roster(df, selected_players):
 
 
 
-# Left Column - Your Team
-with col1:
-    st.header("Your Optimal Team")
-
-    # Select positions for your team
-    qb = st.selectbox("Select Quarterback", df[df['Position'] == 'QB']['Player'].tolist())
-    rb1 = st.selectbox("Select Running Back 1", df[df['Position'] == 'RB']['Player'].tolist())
-    rb2 = st.selectbox("Select Running Back 2", df[df['Position'] == 'RB']['Player'].tolist())
-    wr1 = st.selectbox("Select Wide Receiver 1", df[df['Position'] == 'WR']['Player'].tolist())
-    wr2 = st.selectbox("Select Wide Receiver 2", df[df['Position'] == 'WR']['Player'].tolist())
-    te = st.selectbox("Select Tight End", df[df['Position'] == 'TE']['Player'].tolist())
-    flex = st.multiselect("Select Flex Players", df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist(), max_selections=2)
-
-    # Combine selected players for your team
-    selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
-
-    # Calculate and display the total predicted score for your team
-    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
-    st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
-
 # Get the initial optimal roster
 initial_optimal_roster = get_initial_optimal_roster(df)
 
