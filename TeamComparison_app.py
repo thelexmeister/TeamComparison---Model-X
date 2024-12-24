@@ -256,6 +256,8 @@ te_pool = st.multiselect("Select Tight Ends", df[df['Position'] == 'TE']['Player
 # Combining all the selected players in one list
 selected_players = qb_pool + rb_pool + wr_pool + te_pool
 
+import streamlit as st
+
 # Define function to get optimal roster
 def get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool):
     optimal_roster = {}
@@ -276,7 +278,7 @@ def get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool):
     best_te = max(te_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0])
     optimal_roster['TE'] = best_te
     
-    # Combine the remaining players (RB, WR, TE) and pick the top 2
+    # Combine the remaining players (RB, WR, TE) and pick the top 2 for Flex positions
     remaining_players = (set(rb_pool + wr_pool + te_pool) - set(best_rbs) - set(best_wrs) - set([best_te]))
     best_additional_players = sorted(remaining_players, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2]
     
@@ -311,6 +313,22 @@ with col1:
 # Check if there are any selected players for the optimal roster
 if selected_players:
     # Get the optimal roster
+    qb_pool = [qb]
+    rb_pool = [rb1, rb2]
+    wr_pool = [wr1, wr2]
+    te_pool = [te]
+
+    # Combine any remaining choices (from the selected players for Flex) with other available players
+    remaining_rb_pool = list(set(df[df['Position'] == 'RB']['Player'].tolist()) - set(rb_pool))
+    remaining_wr_pool = list(set(df[df['Position'] == 'WR']['Player'].tolist()) - set(wr_pool))
+    remaining_te_pool = list(set(df[df['Position'] == 'TE']['Player'].tolist()) - set(te_pool))
+
+    # Update the pools with the remaining players
+    rb_pool += remaining_rb_pool
+    wr_pool += remaining_wr_pool
+    te_pool += remaining_te_pool
+
+    # Get the optimal roster
     optimal_roster = get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool)
     
     # Display the optimal roster
@@ -325,6 +343,3 @@ if selected_players:
     st.write(f"**Flex2:** {optimal_roster['Flex2']}")
 else:
     st.write("Please select players for each position.")
-
-
-
