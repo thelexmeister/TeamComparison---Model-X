@@ -237,3 +237,68 @@ comparison_df = pd.DataFrame({
 st.write(comparison_df)
 
 st.write("The probability of your team winning is computed based on comparing the two teams' predicted scores using an adjusted Elo-like equation.")
+
+# Streamlit User Interface for Optimal Roster
+st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
+st.text('''Enter your team below and the app will automatically calculate the optimal roster based on the highest predicted scores. 
+You will be able to input your players for each position (QB, RB, WR, TE) and get the best possible team selection!''')
+
+# Create a section for the user to input players
+st.header("Input Your Players")
+
+# Collecting the players from the user
+qb_pool = st.multiselect("Select Quarterbacks", df[df['Position'] == 'QB']['Player'].tolist())
+rb_pool = st.multiselect("Select Running Backs", df[df['Position'] == 'RB']['Player'].tolist())
+wr_pool = st.multiselect("Select Wide Receivers", df[df['Position'] == 'WR']['Player'].tolist())
+te_pool = st.multiselect("Select Tight Ends", df[df['Position'] == 'TE']['Player'].tolist())
+
+# Combining all the selected players in one list
+selected_players = qb_pool + rb_pool + wr_pool + te_pool
+
+# Define function to get optimal roster
+def get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool):
+    optimal_roster = {}
+    
+    # Find the best QB (1 QB)
+    best_qb = max(qb_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0])
+    optimal_roster['QB'] = best_qb
+    
+    # Find the best 2 RBs
+    best_rbs = sorted(rb_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2]
+    optimal_roster['RB1'], optimal_roster['RB2'] = best_rbs
+    
+    # Find the best 2 WRs
+    best_wrs = sorted(wr_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2]
+    optimal_roster['WR1'], optimal_roster['WR2'] = best_wrs
+    
+    # Find the best TE (1 TE)
+    best_te = max(te_pool, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0])
+    optimal_roster['TE'] = best_te
+    
+    # Combine the remaining players (RB, WR, TE) and pick the top 2
+    remaining_players = (set(rb_pool + wr_pool + te_pool) - set(best_rbs) - set(best_wrs) - set([best_te]))
+    best_additional_players = sorted(remaining_players, key=lambda player: df[df['Player'] == player]['Adjusted Median Score'].iloc[0], reverse=True)[:2]
+    
+    optimal_roster['Flex1'], optimal_roster['Flex2'] = best_additional_players
+    
+    return optimal_roster
+
+# Check if there are any selected players
+if selected_players:
+    # Get the optimal roster
+    optimal_roster = get_optimal_roster(qb_pool, rb_pool, wr_pool, te_pool)
+    
+    # Display the optimal roster
+    st.write("### Optimal Roster")
+    st.write(f"**QB:** {optimal_roster['QB']}")
+    st.write(f"**RB1:** {optimal_roster['RB1']}")
+    st.write(f"**RB2:** {optimal_roster['RB2']}")
+    st.write(f"**WR1:** {optimal_roster['WR1']}")
+    st.write(f"**WR2:** {optimal_roster['WR2']}")
+    st.write(f"**TE:** {optimal_roster['TE']}")
+    st.write(f"**Flex1:** {optimal_roster['Flex1']}")
+    st.write(f"**Flex2:** {optimal_roster['Flex2']}")
+else:
+    st.write("Please select players for each position.")
+
+
