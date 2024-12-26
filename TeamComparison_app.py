@@ -149,33 +149,22 @@ def calculate_elo_probability(team_score, opponent_score):
 
 # Function to fetch last modified date from GitHub for the file
 def get_last_updated_date():
-    # Replace with the URL of your raw file on GitHub
-    url = "https://api.github.com/repos/YOUR_USERNAME/YOUR_REPOSITORY/contents/player_median_scores.xlsx"
+    # Replace with the URL of your GitHub repository's commit history
+    url = "https://api.github.com/repos/thelexmeister/TeamComparison---Model-X/commits?path=player_median_scores.xlsx"
     
     # Make a request to GitHub API
     response = requests.get(url)
     
     if response.status_code == 200:
-        file_info = response.json()
-        last_updated_str = file_info['last_modified']  # Extract the last modified timestamp
-        last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
-        return last_updated_dt
-    else:
-        return None  # Return None if the request fails
-
-# Function to fetch last modified date from GitHub for the file
-def get_last_updated_date():
-    # Replace with the URL of your raw file on GitHub
-    url = "https://api.github.com/repos/thelexmeister/TeamComparison---Model-X/contents/player_median_scores.xlsx"
-    
-    # Make a request to GitHub API
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        file_info = response.json()
-        last_updated_str = file_info['last_modified']  # Extract the last modified timestamp
-        last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
-        return last_updated_dt
+        commits = response.json()
+        
+        # Get the timestamp of the most recent commit involving the file
+        if commits:
+            last_updated_str = commits[0]['commit']['committer']['date']  # Get the commit timestamp
+            last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
+            return last_updated_dt
+        else:
+            return None  # Return None if no commits are found
     else:
         return None  # Return None if the request fails
 
