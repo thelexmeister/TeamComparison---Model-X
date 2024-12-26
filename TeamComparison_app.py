@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
+import requests
+from datetime import datetime
 
 # Set the layout to wide
 st.set_page_config(layout="wide")
@@ -145,6 +147,22 @@ def calculate_elo_probability(team_score, opponent_score):
     probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
     return probability
 
+# Function to fetch last modified date from GitHub for the file
+def get_last_updated_date():
+    # Replace with the URL of your raw file on GitHub
+    url = "https://api.github.com/repos/YOUR_USERNAME/YOUR_REPOSITORY/contents/player_median_scores.xlsx"
+    
+    # Make a request to GitHub API
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        file_info = response.json()
+        last_updated_str = file_info['last_modified']  # Extract the last modified timestamp
+        last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
+        return last_updated_dt
+    else:
+        return None  # Return None if the request fails
+
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
@@ -155,6 +173,43 @@ st.text('''These scores are from my most current model, which will be MUCH lower
 system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
 st.text(' ')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
+
+
+# Function to fetch last modified date from GitHub for the file
+def get_last_updated_date():
+    # Replace with the URL of your raw file on GitHub
+    url = "https://api.github.com/repos/thelexmeister/TeamComparison---Model-X/contents/player_median_scores.xlsx"
+    
+    # Make a request to GitHub API
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        file_info = response.json()
+        last_updated_str = file_info['last_modified']  # Extract the last modified timestamp
+        last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
+        return last_updated_dt
+    else:
+        return None  # Return None if the request fails
+
+# Streamlit User Interface
+st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
+st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
+the first one, click on it. Click again in the space, then type your second name until you find the player you want to add.
+Then click outside the box when you have 2 names in red in the boxes.''')
+st.text(' ')
+st.text('''These scores are from my most current model, which will be MUCH lower than the ESPN predicted values, as they are calculated using a different scoring
+system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
+st.text(' ')
+st.write('### MOST IMPORTANTLY - HAVE FUN!!')
+
+# Get the last updated date from GitHub
+last_updated_dt = get_last_updated_date()
+
+# Display last updated date if available
+if last_updated_dt:
+    st.write(f"Last updated: {last_updated_dt.strftime('%Y-%m-%d %H:%M:%S')}")
+else:
+    st.write("Last updated information could not be fetched.")
 
 # Create two columns for layout
 col1, col2 = st.columns(2)
