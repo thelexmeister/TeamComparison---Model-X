@@ -104,10 +104,10 @@ def plot_historical_scores(players, df2):
 
     # Color mapping for historical scores
     historical_color_map = {
-        'Week 15': 'red',
-        'Week 14': 'yellow',
-        'Week 13': 'green',
-        'Week 12': 'blue'
+        'Week 16': 'red',
+        'Week 15': 'yellow',
+        'Week 14': 'green',
+        'Week 13': 'blue'
     }
 
     # Columns corresponding to the last four weeks (adjust as new weeks come in)
@@ -160,7 +160,7 @@ st.write('### MOST IMPORTANTLY - HAVE FUN!!')
 
 # Display last updated date if available
 
-    st.write('Last updated: 12/26/2024 2:00pm')
+st.write('Last updated: 12/26/2024 2:00pm')
 
 
 # Create two columns for layout
