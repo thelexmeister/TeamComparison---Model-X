@@ -154,8 +154,8 @@ st.text(' ')
 st.text('''These scores are from my most current model, which will be lower than the ESPN predicted values, as they are calculated using a different scoring
 system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
 st.text(' ')
-st.text('NEW!! now injured players listed as OUT will record a 0 for their predicted score AND the "next man up" will have a higher prediction due to 
-the "starter" being out')
+st.text('''NEW!! now injured players listed as OUT will record a 0 for their predicted score AND the next man up will have a higher prediction due to 
+the starter being out''')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
 
 
