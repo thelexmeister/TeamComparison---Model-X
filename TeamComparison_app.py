@@ -150,7 +150,7 @@ def calculate_elo_probability(team_score, opponent_score):
 # Function to fetch last modified date from GitHub for the file
 def get_last_updated_date():
     # Replace with the URL of your GitHub repository's commit history
-    url = "https://api.github.com/repos/thelexmeister/TeamComparison---Model-X/commits?path=player_median_scores.xlsx"
+    url = "https://api.github.com/thelexmeister/TeamComparison---Model-X/blob/main/player_median_scores.xlsx"
     
     # Make a request to GitHub API
     response = requests.get(url)
