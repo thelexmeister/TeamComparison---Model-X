@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
-import requests
-from datetime import datetime
 
 # Set the layout to wide
 st.set_page_config(layout="wide")
@@ -158,7 +156,6 @@ system than our league, and they are also very conservative, providing the most 
 st.text(' ')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
 
-# Display last updated date if available
 
 st.write('Last updated: 12/26/2024 2:00pm')
 
