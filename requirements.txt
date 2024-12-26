@@ -4,5 +4,3 @@ pandas
 openpyxl
 plotly
 scipy
-requests
-datetime
