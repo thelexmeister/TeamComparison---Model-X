@@ -163,18 +163,6 @@ def get_last_updated_date():
     else:
         return None  # Return None if the request fails
 
-# Streamlit User Interface
-st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
-st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
-the first one, click on it. Click again in the space, then type your second name until you find the player you want to add.
-Then click outside the box when you have 2 names in red in the boxes.''')
-st.text(' ')
-st.text('''These scores are from my most current model, which will be MUCH lower than the ESPN predicted values, as they are calculated using a different scoring
-system than our league, and they are also very conservative, providing the most opportunity to be correct and underpredict.''')
-st.text(' ')
-st.write('### MOST IMPORTANTLY - HAVE FUN!!')
-
-
 # Function to fetch last modified date from GitHub for the file
 def get_last_updated_date():
     # Replace with the URL of your raw file on GitHub
