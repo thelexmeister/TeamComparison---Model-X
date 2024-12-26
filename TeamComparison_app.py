@@ -147,27 +147,6 @@ def calculate_elo_probability(team_score, opponent_score):
     probability = 1 / (1 + 10 ** ((opponent_score - team_score) / 400))
     return probability
 
-# Function to fetch last modified date from GitHub for the file
-def get_last_updated_date():
-    # Replace with the URL of your GitHub repository's commit history
-    url = "https://api.github.com/repos/thelexmeister/TeamComparison---Model-X/commits?path=main/player_median_scores.xlsx"
-    
-    # Make a request to GitHub API
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        commits = response.json()
-        
-        # Get the timestamp of the most recent commit involving the file
-        if commits:
-            last_updated_str = commits[0]['commit']['committer']['date']  # Get the commit timestamp
-            last_updated_dt = datetime.strptime(last_updated_str, '%Y-%m-%dT%H:%M:%SZ')  # Convert to datetime object
-            return last_updated_dt
-        else:
-            return None  # Return None if no commits are found
-    else:
-        return None  # Return None if the request fails
-
 # Streamlit User Interface
 st.title('Western Wolves: NFL Fantasy Team Prediction Dashboard')
 st.text('''All you have to do is start typing the name of your player in each slot and then click on it. For the flex players, just start typing 
@@ -179,14 +158,10 @@ system than our league, and they are also very conservative, providing the most 
 st.text(' ')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
 
-# Get the last updated date from GitHub
-last_updated_dt = get_last_updated_date()
-
 # Display last updated date if available
-if last_updated_dt:
-    st.write(f"Last updated: {last_updated_dt.strftime('%Y-%m-%d %H:%M:%S')}")
-else:
-    st.write("Last updated information could not be fetched.")
+
+    st.write('Last updated: 12/26/2024 2:00pm')
+
 
 # Create two columns for layout
 col1, col2 = st.columns(2)
