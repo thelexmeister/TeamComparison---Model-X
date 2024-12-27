@@ -189,7 +189,32 @@ with col1:
     total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
     st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
 
-
+    # Initialize lists for players who are "Out" and "Questionable"
+    out_players = []
+    questionable_players = []
+    
+    # Check injury status for each selected player
+    for player in selected_players:
+        # Get the player's injury status from the DataFrame
+        injury_status = df[df['Player'] == player]['Injury Status'].iloc[0]
+        
+        # Append player to appropriate list based on injury status
+        if injury_status == 'Out':
+            out_players.append(player)
+        elif injury_status == 'Questionable':
+            questionable_players.append(player)
+    
+    # Display players who are "Out"
+    if out_players:
+        st.write(f"The players you have selected who are out due to injury are: {', '.join(out_players)}.")
+    else:
+        st.write("None of the players you have selected are out due to injury.")
+    
+    # Display players who are "Questionable"
+    if questionable_players:
+        st.write(f"The players you have selected who are questionable to play are: {', '.join(questionable_players)}.")
+    else:
+        st.write("None of the players you have selected are questionable to play.")
 
 # Right Column - Opponent's Team
 with col2:
