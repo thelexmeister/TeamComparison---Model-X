@@ -240,6 +240,33 @@ with col2:
     opponent_total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in opponent_selected_players)
     st.write(f"Total Predicted Score for Opponent's Team: {round(opponent_total_score, 1)}")
 
+# Initialize lists for players who are "Out" and "Questionable"
+    out_players_opp = []
+    questionable_players_opp = []
+    
+    # Check injury status for each selected player
+    for player in opponent_selected_players:
+        # Get the player's injury status from the DataFrame
+        injury_status_opp = df[df['Player'] == player]['Injury Status'].iloc[0]
+        
+        # Append player to appropriate list based on injury status
+        if injury_status_opp == 'Out':
+            out_players_opp.append(player)
+        elif injury_status_opp == 'Questionable':
+            questionable_players_opp.append(player)
+    
+    # Display players who are "Out"
+    if out_players_opp:
+        st.write(f"The players you have selected who are out due to injury are: {', '.join(out_players_opp)}.")
+    else:
+        st.write("None of the players you have selected are out due to injury.")
+    
+    # Display players who are "Questionable"
+    if questionable_players_opp:
+        st.write(f"The players you have selected who are questionable to play are: {', '.join(questionable_players_opp)}.")
+    else:
+        st.write("None of the players you have selected are questionable to play.")
+
 
 st.text(' ')
 st.text('''In the figures above, RED means high confidence in the prediction and zone of probability, BLUE means moderate confidence,
