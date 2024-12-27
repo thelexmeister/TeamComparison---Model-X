@@ -257,15 +257,15 @@ with col2:
     
     # Display players who are "Out"
     if out_players_opp:
-        st.write(f"The players you have selected who are out due to injury are: {', '.join(out_players_opp)}.")
+        st.write(f"The players your opponent has selected who are out due to injury are: {', '.join(out_players_opp)}.")
     else:
-        st.write("None of the players you have selected are out due to injury.")
+        st.write("None of the players your opponent has selected are out due to injury.")
     
     # Display players who are "Questionable"
     if questionable_players_opp:
-        st.write(f"The players you have selected who are questionable to play are: {', '.join(questionable_players_opp)}.")
+        st.write(f"The players your opponent has selected who are questionable to play are: {', '.join(questionable_players_opp)}.")
     else:
-        st.write("None of the players you have selected are questionable to play.")
+        st.write("None of the players your opponent has selected are questionable to play.")
 
 
 st.text(' ')
