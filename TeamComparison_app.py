@@ -179,6 +179,10 @@ with col1:
         else:
             return player_name
     
+    # Function to remove injury status for score calculation
+    def get_clean_player_name(player_name):
+        return player_name.split(' ')[0]  # Remove " Q" or " O" if present
+    
     # Select positions for your team
     qb = st.selectbox("Select Quarterback", 
                       [get_injury_status(player) for player in df[df['Position'] == 'QB']['Player'].tolist()], 
@@ -208,17 +212,18 @@ with col1:
                           [get_injury_status(player) for player in df[(df['Position'] == 'RB') | (df['Position'] == 'WR') | (df['Position'] == 'TE')]['Player'].tolist()], 
                           max_selections=2, key="flex_select")
     
-    # Combine selected players for your team (strip injury status for calculation)
-    selected_players = [qb, rb1, rb2, wr1, wr2, te] + flex
-    selected_players = [player.split(' ')[0] for player in selected_players]  # Remove the injury status when combining
+    # Combine selected players for your team (use clean names for score calculation)
+    selected_players_display = [qb, rb1, rb2, wr1, wr2, te] + flex
+    selected_players_clean = [get_clean_player_name(player) for player in selected_players_display]
     
     # Plot your team's predicted scores with probability ranges
-    fig = plot_player_scores(selected_players, team_name="Your Team")
+    fig = plot_player_scores(selected_players_clean, team_name="Your Team")
     st.plotly_chart(fig, key="your_team_plot")
     
     # Calculate and display the total predicted score for your team
-    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players)
+    total_score = sum(df[df['Player'] == player]['Adjusted Median Score'].iloc[0] for player in selected_players_clean)
     st.write(f"Your Team's Total Predicted Score: {total_score:.1f}")
+
 
 
 # Right Column - Opponent's Team
