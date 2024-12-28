@@ -159,7 +159,7 @@ the starter being out''')
 st.write('### MOST IMPORTANTLY - HAVE FUN!!')
 
 
-st.write('Last updated: 12/27/2024 12:35pm')
+st.write('Last updated: 12/27/2024 6:55pm')
 
 
 # Create two columns for layout
