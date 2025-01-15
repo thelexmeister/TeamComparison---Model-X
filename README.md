@@ -1,1 +1,1 @@
-The data for the comparison comes from a complex prediction model that I have created to produce the predicions and the zones of probabilty.
+The data for the comparison comes from a complex prediction model that I have created to produce the predicions and the zones of probabilty. That code is not here, but includes pieces like: injury status of the player and those around him, bayesian predictions of the score, and the effect of defense the player is playing against, and more.
